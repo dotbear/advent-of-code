@@ -28,13 +28,17 @@ fn main() -> io::Result<()> {
                         ticks
                     );
                     println!("times past zero {}", times_past_zero);
+                    println!("result {}", result);
                 }
 
                 match direction {
                     Some('L') => {
                         let freespin = current_value - (ticks % 100);
                         if freespin < 0 {
-                            times_past_zero += 1;
+                            if current_value != 0 {
+                                times_past_zero += 1;
+                            }
+
                             if iterator < 20 {
                                 println!("going past zero! {}", times_past_zero);
                             }
@@ -45,12 +49,15 @@ fn main() -> io::Result<()> {
                     }
                     Some('R') => {
                         let freespin = current_value + (ticks % 100);
+                        let new_pos = freespin - 100;
                         if freespin > 99 {
-                            times_past_zero += 1;
+                            if current_value != 0 && new_pos != 0 {
+                                times_past_zero += 1;
+                            }
                             if iterator < 20 {
                                 println!("going past zero! {}", times_past_zero);
                             }
-                            current_value = freespin - 100;
+                            current_value = new_pos;
                         } else {
                             current_value = freespin;
                         }
@@ -60,9 +67,9 @@ fn main() -> io::Result<()> {
                     }
                 }
 
-                // if current_value == 0 {
-                //     times_past_zero += 1;
-                // }
+                if current_value == 0 {
+                    times_past_zero += 1;
+                }
 
                 result += times_past_zero;
                 iterator += 1;
