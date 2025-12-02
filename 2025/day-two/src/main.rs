@@ -13,18 +13,31 @@ fn main() -> Result<(), Box<dyn Error>> {
         match parsed_range {
             [Ok(start), Ok(end)] => {
                 for i in start..=end {
-                    let string: String = i.to_string();
-                    let length = string.chars().count();
+                    let mut sequence: Vec<char> = vec![];
+                    let mut test_sequence: Vec<char> = vec![];
+                    let mut offset = 0;
 
-                    if length.is_multiple_of(2) {
-                        let midpoint = length.div_ceil(2);
-                        let halves = string.split_at(midpoint);
-                        if halves.0 == halves.1 {
+                    println!("i: {}", i);
+
+                    for (j, char) in i.to_string().chars().enumerate() {
+                        if !sequence.is_empty()
+                            && sequence[offset] == char
+                            && test_sequence != sequence
+                        {
+                            offset = j - 1;
+                            test_sequence.push(char);
+                        } else {
+                            sequence.push(char);
+                        }
+
+                        if (j + 1 == i.to_string().chars().count() && test_sequence == sequence) {
+                            println!("Found sequence! {:?}", sequence);
                             result += i;
                         }
                     }
                 }
             }
+
             err => {
                 println!("Error {:?}", parts);
                 println!("Error! {:?}", err);
