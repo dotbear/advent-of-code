@@ -9,7 +9,6 @@ fn main() -> io::Result<()> {
 
     let mut current_value = 50;
     let mut result = 0;
-    let mut iterator = 0;
 
     for line_result in reader.lines() {
         match line_result {
@@ -20,27 +19,12 @@ fn main() -> io::Result<()> {
                 let ticks = ticks_string.parse::<i32>().unwrap();
                 let mut times_past_zero = ticks / 100;
 
-                if iterator < 20 {
-                    println!("the current value is {}", current_value);
-                    println!(
-                        "Reading direction {} and ticks {}",
-                        direction.unwrap(),
-                        ticks
-                    );
-                    println!("times past zero {}", times_past_zero);
-                    println!("result {}", result);
-                }
-
                 match direction {
                     Some('L') => {
                         let freespin = current_value - (ticks % 100);
                         if freespin < 0 {
                             if current_value != 0 {
                                 times_past_zero += 1;
-                            }
-
-                            if iterator < 20 {
-                                println!("going past zero! {}", times_past_zero);
                             }
                             current_value = 100 + freespin;
                         } else {
@@ -53,9 +37,6 @@ fn main() -> io::Result<()> {
                         if freespin > 99 {
                             if current_value != 0 && new_pos != 0 {
                                 times_past_zero += 1;
-                            }
-                            if iterator < 20 {
-                                println!("going past zero! {}", times_past_zero);
                             }
                             current_value = new_pos;
                         } else {
@@ -72,7 +53,6 @@ fn main() -> io::Result<()> {
                 }
 
                 result += times_past_zero;
-                iterator += 1;
             }
             Err(e) => {
                 eprintln!("Error reading line: {}", e);
